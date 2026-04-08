@@ -1,10 +1,16 @@
+import os
+from dotenv import load_dotenv
 import requests
 from fastapi import FastAPI, Request, BackgroundTasks
 from google import genai
 
 # ==========================================
-# CONFIGURATION — Fill these in
+# CONFIGURATION 
 # ==========================================
+load_dotenv()
+HTTPSMS_API_KEY = os.getenv("HTTPSMS_API_KEY")
+GEMINI_API_KEY  = os.getenv("GEMINI_API_KEY")
+FROM_NUMBER     = os.getenv("FROM_NUMBER")
 HTTPSMS_API_KEY = "uk_tDiNLOO2x1h7RfzafgKkVan94FNuUKebua-mUjv25zIVFkPJyupSUK1OO-vs9Pdf"
 GEMINI_API_KEY  = "AIzaSyB_-jSKfJW0jPiUf2JBT1QZPKx-khooqvM"
 FROM_NUMBER     = "+639760732493"  # ← Replace with your actual Android number
