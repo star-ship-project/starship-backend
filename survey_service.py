@@ -35,11 +35,11 @@ class SurveyService:
             if len(parts) >= 1:
                 self.db.update_bio(user_id, "last_name", parts[0], 4)
             if len(parts) >= 2:
-                self.db.update_bio(user_id, "suffix_name", parts[1], 4)
+                self.db.update_bio(user_id, "first_name", parts[1], 4)
             if len(parts) >= 3:
-                self.db.update_bio(user_id, "first_name", parts[2], 4)
+                self.db.update_bio(user_id, "middle_name", parts[2], 4)
             if len(parts) >= 4:
-                self.db.update_bio(user_id, "middle_name", parts[3], 4)
+                self.db.update_bio(user_id, "suffix_name", parts[3], 4)
             print(f"[DB] Saved name for user_id {user_id}: {user_text}")
             self.sms.send_sms(phone, self.questions[4])
             return

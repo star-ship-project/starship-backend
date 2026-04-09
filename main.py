@@ -24,7 +24,7 @@ DISPLAY_MESSAGES = {
 SURVEY_QUESTIONS = {
     1: "Ilagay ang DepEd ID: ",
     2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
-    3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
+    3: "Buong Pangalan [Apilyido],[Unang Pangalan],[Gitnang Pangalan],[Suffix/Hulapi]",
     4: "Edad (Ex: 30): ",
     5: "Kasarian (Ex: Lalake): ",
     6: "Tagal ng Pagtuturo: ",
