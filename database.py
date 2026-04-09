@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class DatabaseManager:
     def __init__(self, db_file: str):
         self.db_file = db_file
