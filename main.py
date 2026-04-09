@@ -14,7 +14,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 FROM_NUMBER = os.getenv("FROM_NUMBER")
 
 # Change database file here
-DB_FILE = "education.db"
+DB_FILE = "star.db"
 
 DISPLAY_MESSAGES = {
     1: "Good Day! This is the STAR's data collection system!",
