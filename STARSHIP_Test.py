@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from dotenv import load_dotenv
 import requests
 from fastapi import FastAPI, Request, BackgroundTasks
@@ -12,9 +13,32 @@ HTTPSMS_API_KEY = os.getenv("HTTPSMS_API_KEY")
 GEMINI_API_KEY  = os.getenv("GEMINI_API_KEY")
 FROM_NUMBER     = os.getenv("FROM_NUMBER")
 
+# ==========================================
+# DATABASE INIT
+# ==========================================
+DB_FILE = "teachers.db"
+
+def init_db():
+    """Creates the SQLite database and table if they don't exist."""
+    with sqlite3.connect(DB_FILE) as db_file:
+        cursor = db_file.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS survey_data (
+                phone TEXT PRIMARY KEY,
+                step INTEGER DEFAULT 1,
+                errors INTEGER DEFAULT 0,
+                q1_total_students INTEGER,
+                q2_no_internet INTEGER
+            )
+        """)
+        db_file.commit()
+    print("[DB] SQLite Database Initialized.")
+
+init_db() # Run this when the script starts
+
 
 # ==========================================
-# INIT
+# APP INIT
 # ==========================================
 client = genai.Client(api_key=GEMINI_API_KEY)
 print(f"[DEBUG] Using API key: {HTTPSMS_API_KEY}")
@@ -29,6 +53,7 @@ SURVEY_QUESTIONS = {
     2: "Thank you. Now, please reply with the number of students who DO NOT have internet access at home.",
 }
 THANK_YOU_MSG = "Data saved successfully. Thank you for your submission!"
+
 
 # ==========================================
 # HELPERS
@@ -72,39 +97,62 @@ Rules:
 
 
 def process_sms(phone: str, text: str):
-    if phone not in user_states:
-        user_states[phone] = {"step": 1, "data": {}, "errors": 0}
-        send_sms(phone, SURVEY_QUESTIONS[1])
-        return
+    # Connect to DB securely within the background task thread
+    with sqlite3.connect(DB_FILE) as db_file:
+        cursor = db_file.cursor()
 
-    step = user_states[phone]["step"]
+        # 1. Check if user exists in database
+        cursor.execute("SELECT step, errors FROM survey_data WHERE phone = ?", (phone,))
+        row = cursor.fetchone()
 
-    if step > len(SURVEY_QUESTIONS):
-        send_sms(phone, "You have already completed the survey. Thank you!")
-        return
+        if not row:
+            # New User: Insert them into DB and send Question 1
+            cursor.execute("INSERT INTO survey_data (phone, step, errors) VALUES (?, 1, 0)", (phone,))
+            db_file.commit()
+            print(f"[DB] New user {phone} added to database.")
+            send_sms(phone, SURVEY_QUESTIONS[1])
+            return
 
-    ai_response = extract_number_with_ai(text, step)
+        step, errors = row
 
-    try:
-        number = int(ai_response)
-        user_states[phone]["errors"] = 0  # reset errors on success
-        user_states[phone]["data"][f"step_{step}"] = number
-        user_states[phone]["step"] += 1
-        next_step = user_states[phone]["step"]
+        if step > len(SURVEY_QUESTIONS):
+            send_sms(phone, "You have already completed the survey. Thank you!")
+            return
 
-        print(f"[DB] {phone} → {user_states[phone]['data']}")
+        # 2. Run AI Extraction
+        ai_response = extract_number_with_ai(text, step)
 
-        if next_step > len(SURVEY_QUESTIONS):
-            send_sms(phone, THANK_YOU_MSG)
-        else:
-            send_sms(phone, SURVEY_QUESTIONS[next_step])
+        try:
+            # 3. Successful extraction (it's a number!)
+            number = int(ai_response)
 
-    except ValueError:
-        if user_states[phone]["errors"] < 1:
-            user_states[phone]["errors"] += 1
-            send_sms(phone, ai_response)
-        else:
-            print(f"[SKIP] Error limit reached for {phone}, not sending.")
+            # Map the current step to the correct database column
+            column_name = "q1_total_students" if step == 1 else "q2_no_internet"
+            next_step = step + 1
+
+            # Update the specific column, increment step, and reset errors
+            cursor.execute(f"""
+                    UPDATE survey_data 
+                    SET {column_name} = ?, step = ?, errors = 0 
+                    WHERE phone = ?
+                """, (number, next_step, phone))
+            db_file.commit()
+
+            print(f"[DB] Saved {column_name} = {number} for {phone}.")
+
+            if next_step > len(SURVEY_QUESTIONS):
+                send_sms(phone, THANK_YOU_MSG)
+            else:
+                send_sms(phone, SURVEY_QUESTIONS[next_step])
+
+        except ValueError:
+            # 4. Failed extraction (AI couldn't find a number)
+            if errors < 1:
+                cursor.execute("UPDATE survey_data SET errors = errors + 1 WHERE phone = ?", (phone,))
+                db_file.commit()
+                send_sms(phone, ai_response)
+            else:
+                print(f"[SKIP] Error limit reached for {phone}, not sending.")
 
 
 # ==========================================
@@ -118,6 +166,7 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
     phone = data.get("contact")
     text  = data.get("content")
 
+    print(f"\n--- INCOMING WEBHOOK ---")
     print(f"[DEBUG] Phone: {phone}, Text: {text}")
 
     if not phone or not text:
