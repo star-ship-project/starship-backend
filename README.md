@@ -1,7 +1,7 @@
 # Installation Steps:
-- git clone <url>
-- pip install -r requirements.txt
-- cp .env.example .env
-- Running the Server: Include the exact command: uvicorn STARSHIP_Test:app --reload
+  1. git clone <url>
+  2. pip install -r requirements.txt
+  3. cp .env.example .env
+  4. Running the Server: Include the exact command: uvicorn STARSHIP_Test:app --reload
   
-## Manually add the FROM_NUMBER key
+>Note: Manually add the FROM_NUMBER key
