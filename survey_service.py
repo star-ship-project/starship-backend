@@ -22,7 +22,6 @@ class SurveyService:
             self.sms.send_sms(phone, "You have already completed the survey. Thank you!")
             return
 
-        ai_response = self.ai.extract_number(text, step)
 
         try:
             number = int(ai_response)

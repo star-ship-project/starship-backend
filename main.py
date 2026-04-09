@@ -23,11 +23,16 @@ DISPLAY_MESSAGES = {
 }
 
 SURVEY_QUESTIONS = {
-            1: "Ilagay ang DepEd ID: ",
-            2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
-            3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
-            4: "Edad (Ex: 30): ",
-            5: "Kasarian (Ex: Lalake): ",
+    1: "Ilagay ang DepEd ID: ",
+    2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
+    3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
+    4: "Edad (Ex: 30): ",
+    5: "Kasarian (Ex: Lalake): ",
+    6: "Tagal ng Pagtuturo: ",
+    7: "Posisyon: ",
+    8: "Ispesyalisasiyon: ",
+    9: "Gaano kadalas ka may internet? ",
+    10: "Gaano karami ang iyong device? "
 }
 
 db = DatabaseManager(DB_FILE)
