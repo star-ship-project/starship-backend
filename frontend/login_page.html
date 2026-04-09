@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAR S.H.I.P - Login Page</title>
+    <style>
+        /* --- Base Reset & Typography --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* CENTERED DIV */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            
+            /* High-tech dark gradient background */
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #e2e8f0;
+        }
+
+        /* --- Login Container Styling --- */
+        .login-container {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 5px;
+            color: #38bdf8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .login-container p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        /* --- Login Container Form Inputs --- */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        /* Shared input styling */
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        /* --- Password Specifics & Toggle --- */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Make room on the right side of the input so text doesn't hide behind the icon */
+        .password-wrapper input {
+            padding-right: 45px; 
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-password:hover {
+            color: #38bdf8;
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* --- Submit Button --- */
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: #0369a1;
+        }
+        
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>STAR S.H.I.P</h2>
+        
+        <form action="#" method="POST" id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your ID">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Security Code</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <button type="button" class="toggle-password" id="toggleBtn" title="Show/Hide Password">
+                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+	
+    <script>
+	//  Show & Hide Password Logic
+	//  This part uses javascript
+	
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        // SVG code for an open eye
+        const eyeOpenSVG = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+        
+        // SVG code for an eye with a slash through it
+        const eyeClosedSVG = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+
+        toggleBtn.addEventListener('click', () => {
+            // Check if the input is currently set to 'password'
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            
+            // Swap the type: if it was password, make it text (visible), otherwise make it password (hidden)
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            // Swap the icon to match the current state
+            eyeIcon.innerHTML = isPassword ? eyeClosedSVG : eyeOpenSVG;
+        });
+    </script>
+</body>
+</html>
