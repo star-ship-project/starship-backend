@@ -1,8 +1,7 @@
 class SurveyService:
-    def __init__(self, db, sms_service, ai_service, messages, questions):
+    def __init__(self, db, sms_service, messages, questions):
         self.db = db
         self.sms = sms_service
-        self.ai = ai_service
 
         self.messages = messages
         self.questions = questions
@@ -11,25 +10,28 @@ class SurveyService:
         user_row = self.db.get_user_by_phone(phone)
 
         if not user_row:
+            self.db.create_user("", phone)
+            print(f"[DB] New user created for phone {phone}")
+            self.sms.send_sms(phone, self.messages[1])
             self.sms.send_sms(phone, self.questions[1])
             return
 
         deped_id, school_id, first_name, middle_name, last_name, suffix_name, sex, age, phone_number, step, errors = user_row
 
-        if step > len(self.questions):
+        if step > 10:
             self.sms.send_sms(phone, "You have already completed the survey. Thank you!")
             return
 
-        ai_response = self.ai.extract_number(text, step)
+        user_text = text.strip()
 
         if step == 1:
-            self.db.create_user(ai_response, phone)
-            print(f"[DB] New user {ai_response} added to database.")
+            self.db.update_bio(deped_id, "deped_id", user_text, 2)
+            print(f"[DB] Saved deped_id = {user_text} for {phone}")
             self.sms.send_sms(phone, self.questions[2])
             return
 
         if step == 3:
-            parts = [p.strip() for p in text.split(",")]
+            parts = [p.strip() for p in user_text.split(",")]
             if len(parts) >= 1:
                 self.db.update_bio(deped_id, "last_name", parts[0], 4)
             if len(parts) >= 2:
@@ -38,67 +40,70 @@ class SurveyService:
                 self.db.update_bio(deped_id, "first_name", parts[2], 4)
             if len(parts) >= 4:
                 self.db.update_bio(deped_id, "middle_name", parts[3], 4)
-            print(f"[DB] Saved name for {deped_id}: {text}")
+            print(f"[DB] Saved name for {deped_id}: {user_text}")
             self.sms.send_sms(phone, self.questions[4])
             return
 
         try:
-            value = int(ai_response)
+            value = int(user_text)
 
             if step == 4:
                 self.db.update_bio(deped_id, "age", value, 5)
                 print(f"[DB] Saved age = {value} for {deped_id}")
+                self.sms.send_sms(phone, self.questions[5])
+                return
             elif step == 6:
                 self.db.update_professional(deped_id, "years_experience", value)
-                self.db.update_bio(deped_id, "step", 7)
+                self.db.update_step(deped_id, 7)
                 print(f"[DB] Saved years_experience = {value} for {deped_id}")
                 self.sms.send_sms(phone, self.questions[7])
                 return
             elif step == 10:
                 self.db.update_professional(deped_id, "device_count", value)
+                self.db.update_step(deped_id, 11)
                 print(f"[DB] Saved device_count = {value} for {deped_id}")
-                self.sms.send_sms(phone, self.messages[-1])
+                self.sms.send_sms(phone, "Salamat! Successfully completed the survey.")
                 return
             else:
-                self.sms.send_sms(phone, "Invalid survey step.")
+                self.sms.send_sms(phone, self.questions[step + 1])
                 return
 
         except ValueError:
             if step == 2:
-                self.db.update_bio(deped_id, "school_id", ai_response, 3)
-                print(f"[DB] Saved school_id = {ai_response} for {deped_id}")
+                self.db.update_bio(deped_id, "school_id", user_text, 3)
+                print(f"[DB] Saved school_id = {user_text} for {deped_id}")
                 self.sms.send_sms(phone, self.questions[3])
                 return
             elif step == 5:
-                self.db.update_bio(deped_id, "sex", ai_response, 6)
-                print(f"[DB] Saved sex = {ai_response} for {deped_id}")
+                self.db.update_bio(deped_id, "sex", user_text, 6)
+                print(f"[DB] Saved sex = {user_text} for {deped_id}")
                 self.db.create_professional_record(deped_id)
                 self.sms.send_sms(phone, self.questions[6])
                 return
             elif step == 7:
-                self.db.update_professional(deped_id, "role_position", ai_response)
-                self.db.update_bio(deped_id, "step", 8)
-                print(f"[DB] Saved role_position = {ai_response} for {deped_id}")
+                self.db.update_professional(deped_id, "role_position", user_text)
+                self.db.update_step(deped_id, 8)
+                print(f"[DB] Saved role_position = {user_text} for {deped_id}")
                 self.sms.send_sms(phone, self.questions[8])
                 return
             elif step == 8:
-                self.db.update_professional(deped_id, "specialization", ai_response)
-                self.db.update_bio(deped_id, "step", 9)
-                print(f"[DB] Saved specialization = {ai_response} for {deped_id}")
+                self.db.update_professional(deped_id, "specialization", user_text)
+                self.db.update_step(deped_id, 9)
+                print(f"[DB] Saved specialization = {user_text} for {deped_id}")
                 self.sms.send_sms(phone, self.questions[9])
                 return
             elif step == 9:
-                self.db.update_professional(deped_id, "is_internet_access", ai_response)
-                self.db.update_bio(deped_id, "step", 10)
-                print(f"[DB] Saved is_internet_access = {ai_response} for {deped_id}")
+                self.db.update_professional(deped_id, "is_internet_access", user_text)
+                self.db.update_step(deped_id, 10)
+                print(f"[DB] Saved is_internet_access = {user_text} for {deped_id}")
                 self.sms.send_sms(phone, self.questions[10])
                 return
-
-            if errors < 1:
-                self.db.increment_error(deped_id)
-                self.sms.send_sms(phone, ai_response)
             else:
-                print(f"[SKIP] Error limit reached for {deped_id}, not sending.")
+                if errors < 1:
+                    self.db.increment_error(deped_id)
+                    self.sms.send_sms(phone, f"Invalid input. Please try again: {self.questions[step]}")
+                else:
+                    print(f"[SKIP] Error limit reached for {deped_id}, not sending.")
                 return
 
         next_step = step + 1

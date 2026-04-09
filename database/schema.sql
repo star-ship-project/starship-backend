@@ -1,4 +1,4 @@
-CREATE TABLE schools (
+CREATE TABLE IF NOT EXISTS schools (
   school_id VARCHAR(10) PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
   region VARCHAR(50) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE schools (
   total_enrollment INTEGER
 );
 
-CREATE TABLE teachers_bio (
+CREATE TABLE IF NOT EXISTS teachers_bio (
   deped_id VARCHAR(50) PRIMARY KEY,
   school_id VARCHAR(10) REFERENCES schools (school_id),
   first_name VARCHAR(100),
@@ -18,7 +18,7 @@ CREATE TABLE teachers_bio (
   phone_number VARCHAR(13)
 );
 
-CREATE TABLE teachers_professional (
+CREATE TABLE IF NOT EXISTS teachers_professional (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   teacher_id VARCHAR(50) REFERENCES teachers_bio (deped_id),
   years_experience INTEGER,
@@ -29,7 +29,7 @@ CREATE TABLE teachers_professional (
   device_count INTEGER
 );
 
-CREATE TABLE qualifications (
+CREATE TABLE IF NOT EXISTS qualifications (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   teacher_id VARCHAR(50) REFERENCES teachers_bio (deped_id),
   cert_name VARCHAR(255),
@@ -38,7 +38,7 @@ CREATE TABLE qualifications (
   date_obtained DATETIME
 );
 
-CREATE TABLE star_events (
+CREATE TABLE IF NOT EXISTS star_events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   teacher_id VARCHAR(50) REFERENCES teachers_bio(deped_id),
   event_title VARCHAR(100),

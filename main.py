@@ -4,7 +4,6 @@ from fastapi import FastAPI, Request, BackgroundTasks
 
 from database import DatabaseManager
 from sms_service import SMSService
-from ai_service import AIService
 from survey_service import SurveyService
 
 
@@ -39,8 +38,7 @@ db = DatabaseManager(DB_FILE)
 db.init_db()
 
 sms_service = SMSService(HTTPSMS_API_KEY, FROM_NUMBER)
-ai_service = AIService(GEMINI_API_KEY, SURVEY_QUESTIONS)
-survey_service = SurveyService(db, sms_service, ai_service, DISPLAY_MESSAGES, SURVEY_QUESTIONS)
+survey_service = SurveyService(db, sms_service, DISPLAY_MESSAGES, SURVEY_QUESTIONS)
 
 app = FastAPI()
 

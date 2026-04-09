@@ -14,8 +14,12 @@ class DatabaseManager:
             conn.executescript(schema)
 
             cursor = conn.cursor()
-            cursor.execute("ALTER TABLE teachers_bio ADD COLUMN step INTEGER DEFAULT 0")
-            cursor.execute("ALTER TABLE teachers_bio ADD COLUMN errors INTEGER DEFAULT 0")
+            cursor.execute("PRAGMA table_info(teachers_bio)")
+            columns = [row[1] for row in cursor.fetchall()]
+            if "step" not in columns:
+                cursor.execute("ALTER TABLE teachers_bio ADD COLUMN step INTEGER DEFAULT 0")
+            if "errors" not in columns:
+                cursor.execute("ALTER TABLE teachers_bio ADD COLUMN errors INTEGER DEFAULT 0")
             conn.commit()
         print("[DB] SQLite Database Initialized.")
 
@@ -57,7 +61,7 @@ class DatabaseManager:
 
     def update_bio(self, deped_id: str, field: str, value, next_step: int):
         allowed_fields = {
-            "school_id", "first_name", "middle_name", "last_name", 
+            "deped_id", "school_id", "first_name", "middle_name", "last_name", 
             "suffix_name", "sex", "age"
         }
         if field not in allowed_fields:
@@ -87,6 +91,14 @@ class DatabaseManager:
                 SET {field} = ?
                 WHERE teacher_id = ?
             """, (value, deped_id))
+            conn.commit()
+
+    def update_step(self, deped_id: str, step: int):
+        with sqlite3.connect(self.db_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE teachers_bio SET step = ?, errors = 0 WHERE deped_id = ?
+            """, (step, deped_id))
             conn.commit()
 
     def create_professional_record(self, deped_id: str):
