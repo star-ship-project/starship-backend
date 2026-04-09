@@ -18,25 +18,51 @@ toggleBtn.addEventListener('click', () => {
 // --- Authentication Logic ---
 const loginForm = document.getElementById('loginForm');
 const usernameInput = document.getElementById('username');
+const usernameError = document.getElementById('usernameError');
+const passwordError = document.getElementById('passwordError');
+const authError = document.getElementById('authError'); // Grab the new global error
 
 // Login form submission event listener
 loginForm.addEventListener('submit', function(event) {
-    //  Prevent the default form submission (page reload)
+    // 1. Prevent the default form submission (page reload)
     event.preventDefault(); 
 
-    //  Capture the current input values
-    const enteredUsername = usernameInput.value;
+    // 2. Capture the current input values
+    const enteredUsername = usernameInput.value.trim();
     const enteredPassword = passwordInput.value;
 
-    //  Hardcoded Validation
-    //  Hardcoded for now, can and will be changed later if possible
+    // 3. Reset ALL error states on every submit attempt
+    usernameError.classList.remove('show');
+    passwordError.classList.remove('show');
+    authError.classList.remove('show'); // Hide global error
+    usernameInput.style.borderColor = '';
+    passwordInput.style.borderColor = '';
+
+    let hasEmptyFields = false;
+
+    // 4. Check for empty fields simultaneously
+    if (enteredUsername === '') {
+        usernameError.classList.add('show');
+        usernameInput.style.borderColor = '#ef4444'; 
+        hasEmptyFields = true;
+    }
+
+    if (enteredPassword === '') {
+        passwordError.classList.add('show');
+        passwordInput.style.borderColor = '#ef4444'; 
+        hasEmptyFields = true;
+    }
+
+    // Stop here if there are empty fields
+    if (hasEmptyFields) return;
+
+    // 5. Hardcoded Validation (Only runs if both fields have text)
     if (enteredUsername === 'admin1' && enteredPassword === '12345') {
-        
-        // When successful: Redirect to the main dashboard
+        // Success: Redirect to the main console dashboard
         window.location.href = 'dashboard/index.html';
     } else {
-        // Failure: Show error and clear password
-        alert('Authentication Failed: Invalid Username or Security Code.');
+        // Failure: Show inline vague error and clear password
+        authError.classList.add('show'); 
         passwordInput.value = ''; 
         passwordInput.focus(); 
     }
