@@ -1,67 +1,21 @@
 import sqlite3
+import os
 
 class DatabaseManager:
     def __init__(self, db_file: str):
         self.db_file = db_file
 
     def init_db(self):
+        schema_path = os.path.join(os.path.dirname(__file__), "database", "schema.sql")
+        with open(schema_path, "r") as f:
+            schema = f.read()
+
         with sqlite3.connect(self.db_file) as conn:
+            conn.executescript(schema)
+
             cursor = conn.cursor()
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS schools (
-                    school_id VARCHAR(10) PRIMARY KEY,
-                    name VARCHAR(150) NOT NULL,
-                    region VARCHAR(50) NOT NULL,
-                    division VARCHAR(100),
-                    total_enrollment INTEGER
-                )
-            """)
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS teachers_bio (
-                    deped_id VARCHAR(50) PRIMARY KEY,
-                    school_id VARCHAR(10) REFERENCES schools (school_id),
-                    first_name VARCHAR(100),
-                    middle_name VARCHAR(100),
-                    last_name VARCHAR(100),
-                    suffix_name VARCHAR(100),
-                    sex VARCHAR(20),
-                    age INTEGER,
-                    phone_number VARCHAR(13),
-                    step INTEGER DEFAULT 0,
-                    errors INTEGER DEFAULT 0
-                )
-            """)
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS teachers_professional (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    teacher_id VARCHAR(50) REFERENCES teachers_bio (deped_id),
-                    years_experience INTEGER,
-                    teaching_level VARCHAR(50),
-                    role_position VARCHAR(100),
-                    specialization VARCHAR(50),
-                    is_internet_access BOOLEAN,
-                    device_count INTEGER
-                )
-            """)
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS qualifications (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    teacher_id VARCHAR(50) REFERENCES teachers_bio (deped_id),
-                    cert_name VARCHAR(255),
-                    category VARCHAR(50),
-                    awarding_body VARCHAR(150),
-                    date_obtained DATETIME
-                )
-            """)
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS star_events (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    teacher_id VARCHAR(50) REFERENCES teachers_bio(deped_id),
-                    event_title VARCHAR(100),
-                    event_type VARCHAR(50),
-                    event_date date
-                )
-            """)
+            cursor.execute("ALTER TABLE teachers_bio ADD COLUMN step INTEGER DEFAULT 0")
+            cursor.execute("ALTER TABLE teachers_bio ADD COLUMN errors INTEGER DEFAULT 0")
             conn.commit()
         print("[DB] SQLite Database Initialized.")
 
