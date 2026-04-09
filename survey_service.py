@@ -18,8 +18,13 @@ class SurveyService:
 
         deped_id, school_id, first_name, middle_name, last_name, suffix_name, sex, age, phone_number, step, errors = user_row
 
-        if step > 10:
+        if step == 11:
             self.sms.send_sms(phone, "You have already completed the survey. Thank you!")
+            self.db.update_step(deped_id, 12)
+            return
+
+        if step >= 12:
+            print(f"[SILENT DROP] Ignored post-completion message from {phone}")
             return
 
         user_text = text.strip()

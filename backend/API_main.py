@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = "../database/star.db"
+DB_PATH = "../star.db"
 
 # --- Database Helper Function ---
 def get_db_connection():
