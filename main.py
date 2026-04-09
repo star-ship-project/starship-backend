@@ -13,11 +13,15 @@ load_dotenv()
 HTTPSMS_API_KEY = os.getenv("HTTPSMS_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 FROM_NUMBER = os.getenv("FROM_NUMBER")
+
+# Change database file here
 DB_FILE = "education.db"
 
+DISPLAY_MESSAGE = "Good Day! This is the STAR's data collection system!"
+
 SURVEY_QUESTIONS = {
-    1: "Hello Teacher! Please reply with the TOTAL NUMBER of students enrolled in your advisory class.",
-    2: "Thank you. Now, please reply with the number of students who DO NOT have internet access at home.",
+    1: "Enter DepEd id: ",
+    2: "What is your full name? [Last name, Suffix, First name, Middle Name]",
 }
 
 db = DatabaseManager(DB_FILE)

@@ -5,14 +5,20 @@ class SurveyService:
         self.ai = ai_service
 
         self.questions = {
-            1: "Hello Teacher! Please reply with the TOTAL NUMBER of students enrolled in your advisory class.",
-            2: "Thank you. Now, please reply with the number of students who DO NOT have internet access at home.",
+            1: "Ilagay ang DepEd ID: ",
+            2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
+            3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
+            4: "Edad (Ex: 30): ",
+            6: "Kasarian: ",
         }
 
-        self.thank_you_msg = "Data saved successfully. Thank you for your submission!"
+        self.thank_you_msg = ("""
+            Natanggap na ng DepEd ang iyong mga sagot. Maaring maghintay na lamang sa loob ng pitong araw para sa 
+            kumpirmasiyon. Salamat sa iyong pagsagot!
+        """)
 
     def process_sms(self, phone: str, text: str):
-        row = self.db.get_user(phone)
+        row = self.db.track_user(phone)
 
         if not row:
             self.db.create_user(phone)

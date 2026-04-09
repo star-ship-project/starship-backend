@@ -18,25 +18,28 @@ class DatabaseManager:
                     sex TEXT,
                     age INTEGER,
                     contact_number TEXT,
+                    step INTEGER,
                 )
             """)
             conn.commit()
         print("[DB] SQLite Database Initialized.")
 
-    def get_user(self, phone: str):
+    def track_user(self, phone: str):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT step, errors FROM survey_data WHERE phone = ?",
+                "SELECT step, errors FROM teachers WHERE phone = ?",
                 (phone,)
             )
             return cursor.fetchone()
 
     def create_user(self, phone: str):
+        # TODO: Parse full name of teacher's entry
+        # TODO: Insert into database after parsing
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO survey_data (phone, step, errors) VALUES (?, 1, 0)",
+                "INSERT INTO teachers (phone, step, errors) VALUES (?, 0, 1)",
                 (phone,)
             )
             conn.commit()
