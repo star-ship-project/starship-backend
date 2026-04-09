@@ -17,11 +17,17 @@ FROM_NUMBER = os.getenv("FROM_NUMBER")
 # Change database file here
 DB_FILE = "education.db"
 
-DISPLAY_MESSAGE = "Good Day! This is the STAR's data collection system!"
+DISPLAY_MESSAGES = {
+    1: "Good Day! This is the STAR's data collection system!",
+    2:
+}
 
 SURVEY_QUESTIONS = {
-    1: "Enter DepEd id: ",
-    2: "What is your full name? [Last name, Suffix, First name, Middle Name]",
+            1: "Ilagay ang DepEd ID: ",
+            2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
+            3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
+            4: "Edad (Ex: 30): ",
+            5: "Kasarian (Ex: Lalake): ",
 }
 
 db = DatabaseManager(DB_FILE)
@@ -29,7 +35,7 @@ db.init_db()
 
 sms_service = SMSService(HTTPSMS_API_KEY, FROM_NUMBER)
 ai_service = AIService(GEMINI_API_KEY, SURVEY_QUESTIONS)
-survey_service = SurveyService(db, sms_service, ai_service)
+survey_service = SurveyService(db, sms_service, ai_service, DISPLAY_MESSAGES, SURVEY_QUESTIONS)
 
 app = FastAPI()
 

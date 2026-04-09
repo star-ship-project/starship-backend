@@ -1,16 +1,11 @@
 class SurveyService:
-    def __init__(self, db, sms_service, ai_service):
+    def __init__(self, db, sms_service, ai_service, messages, questions):
         self.db = db
         self.sms = sms_service
         self.ai = ai_service
 
-        self.questions = {
-            1: "Ilagay ang DepEd ID: ",
-            2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
-            3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
-            4: "Edad (Ex: 30): ",
-            6: "Kasarian: ",
-        }
+        self.messages = messages
+        self.questions = questions
 
         self.thank_you_msg = ("""
             Natanggap na ng DepEd ang iyong mga sagot. Maaring maghintay na lamang sa loob ng pitong araw para sa 
