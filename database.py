@@ -8,12 +8,16 @@ class DatabaseManager:
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS survey_data (
-                    phone TEXT PRIMARY KEY,
-                    step INTEGER DEFAULT 1,
-                    errors INTEGER DEFAULT 0,
-                    q1_total_students INTEGER,
-                    q2_no_internet INTEGER
+                CREATE TABLE IF NOT EXISTS teachers (
+                    deped_id TEXT PRIMARY KEY,
+                    school_id TEXT,
+                    first_name TEXT,
+                    middle_name TEXT,
+                    last_name TEXT,
+                    suffix_name TEXT,
+                    sex TEXT,
+                    age INTEGER,
+                    contact_number TEXT,
                 )
             """)
             conn.commit()

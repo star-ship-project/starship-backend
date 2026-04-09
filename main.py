@@ -13,7 +13,7 @@ load_dotenv()
 HTTPSMS_API_KEY = os.getenv("HTTPSMS_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 FROM_NUMBER = os.getenv("FROM_NUMBER")
-DB_FILE = "teachers.db"
+DB_FILE = "education.db"
 
 SURVEY_QUESTIONS = {
     1: "Hello Teacher! Please reply with the TOTAL NUMBER of students enrolled in your advisory class.",
