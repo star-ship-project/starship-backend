@@ -18,7 +18,8 @@ class DatabaseManager:
                     sex TEXT,
                     age INTEGER,
                     contact_number TEXT,
-                    step INTEGER,
+                    step INTEGER DEFAULT 0,
+                    errors INTEGER DEFAULT 0
                 )
             """)
             conn.commit()
@@ -39,7 +40,7 @@ class DatabaseManager:
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO teachers (phone, step, errors) VALUES (?, 0, 1)",
+                "INSERT INTO teachers (phone, step, errors) VALUES (?, 1, 0)",
                 (phone,)
             )
             conn.commit()
@@ -52,7 +53,7 @@ class DatabaseManager:
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(f"""
-                UPDATE survey_data
+                UPDATE teachers
                 SET {column_name} = ?, step = ?, errors = 0
                 WHERE phone = ?
             """, (number, next_step, phone))
@@ -62,7 +63,7 @@ class DatabaseManager:
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "UPDATE survey_data SET errors = errors + 1 WHERE phone = ?",
+                "UPDATE teachers SET errors = errors + 1 WHERE phone = ?",
                 (phone,)
             )
             conn.commit()

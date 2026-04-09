@@ -19,7 +19,7 @@ DB_FILE = "education.db"
 
 DISPLAY_MESSAGES = {
     1: "Good Day! This is the STAR's data collection system!",
-    2:
+    2: "Identity confirmed!"
 }
 
 SURVEY_QUESTIONS = {

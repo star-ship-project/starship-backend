@@ -7,11 +7,6 @@ class SurveyService:
         self.messages = messages
         self.questions = questions
 
-        self.thank_you_msg = ("""
-            Natanggap na ng DepEd ang iyong mga sagot. Maaring maghintay na lamang sa loob ng pitong araw para sa 
-            kumpirmasiyon. Salamat sa iyong pagsagot!
-        """)
-
     def process_sms(self, phone: str, text: str):
         row = self.db.track_user(phone)
 
