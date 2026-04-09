@@ -41,7 +41,7 @@ class SurveyService:
             print(f"[DB] Saved {column_name} = {number} for {phone}.")
 
             if next_step > len(self.questions):
-                self.sms.send_sms(phone, self.thank_you_msg)
+                self.sms.send_sms(phone, self.messages[-1])
             else:
                 self.sms.send_sms(phone, self.questions[next_step])
 
