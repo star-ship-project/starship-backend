@@ -7,8 +7,7 @@ CREATE TABLE IF NOT EXISTS schools (
 );
 
 CREATE TABLE IF NOT EXISTS teachers_bio (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  deped_id VARCHAR(50),
+  deped_id VARCHAR(50) PRIMARY KEY,
   school_id VARCHAR(10) REFERENCES schools (school_id),
   first_name VARCHAR(100),
   middle_name VARCHAR(100),

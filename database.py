@@ -20,8 +20,6 @@ class DatabaseManager:
                 cursor.execute("ALTER TABLE teachers_bio ADD COLUMN step INTEGER DEFAULT 0")
             if "errors" not in columns:
                 cursor.execute("ALTER TABLE teachers_bio ADD COLUMN errors INTEGER DEFAULT 0")
-            if "id" not in columns:
-                cursor.execute("ALTER TABLE teachers_bio ADD COLUMN id INTEGER PRIMARY KEY AUTOINCREMENT")
             conn.commit()
         print("[DB] SQLite Database Initialized.")
 
@@ -47,25 +45,7 @@ class DatabaseManager:
             )
             conn.commit()
 
-    def get_user_by_deped_id(self, deped_id: str):
-        with sqlite3.connect(self.db_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT id, deped_id, school_id, first_name, middle_name, last_name, suffix_name, sex, age, phone_number, step, errors FROM teachers_bio WHERE deped_id = ?",
-                (deped_id,)
-            )
-            return cursor.fetchone()
-
-    def get_user_by_phone(self, phone: str):
-        with sqlite3.connect(self.db_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT id, deped_id, school_id, first_name, middle_name, last_name, suffix_name, sex, age, phone_number, step, errors FROM teachers_bio WHERE phone_number = ?",
-                (phone,)
-            )
-            return cursor.fetchone()
-
-    def update_bio(self, user_id: int, field: str, value, next_step: int):
+    def update_bio_by_phone(self, phone: str, field: str, value, next_step: int):
         allowed_fields = {
             "deped_id", "school_id", "first_name", "middle_name", "last_name", 
             "suffix_name", "sex", "age"
@@ -78,8 +58,43 @@ class DatabaseManager:
             cursor.execute(f"""
                 UPDATE teachers_bio
                 SET {field} = ?, step = ?, errors = 0
-                WHERE id = ?
-            """, (value, next_step, user_id))
+                WHERE phone_number = ?
+            """, (value, next_step, phone))
+            conn.commit()
+
+    def get_user_by_deped_id(self, deped_id: str):
+        with sqlite3.connect(self.db_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT deped_id, school_id, first_name, middle_name, last_name, suffix_name, sex, age, phone_number, step, errors FROM teachers_bio WHERE deped_id = ?",
+                (deped_id,)
+            )
+            return cursor.fetchone()
+
+    def get_user_by_phone(self, phone: str):
+        with sqlite3.connect(self.db_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT deped_id, school_id, first_name, middle_name, last_name, suffix_name, sex, age, phone_number, step, errors FROM teachers_bio WHERE phone_number = ?",
+                (phone,)
+            )
+            return cursor.fetchone()
+
+    def update_bio(self, deped_id: str, field: str, value, next_step: int):
+        allowed_fields = {
+            "deped_id", "school_id", "first_name", "middle_name", "last_name", 
+            "suffix_name", "sex", "age"
+        }
+        if field not in allowed_fields:
+            raise ValueError(f"Invalid field: {field}")
+
+        with sqlite3.connect(self.db_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"""
+                UPDATE teachers_bio
+                SET {field} = ?, step = ?, errors = 0
+                WHERE deped_id = ?
+            """, (value, next_step, deped_id))
             conn.commit()
 
     def update_professional(self, deped_id: str, field: str, value):
@@ -99,15 +114,15 @@ class DatabaseManager:
             """, (value, deped_id))
             conn.commit()
 
-    def update_step(self, user_id: int, step: int):
+    def update_step(self, deped_id: str, step: int):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                UPDATE teachers_bio SET step = ?, errors = 0 WHERE id = ?
-            """, (step, user_id))
+                UPDATE teachers_bio SET step = ?, errors = 0 WHERE deped_id = ?
+            """, (step, deped_id))
             conn.commit()
 
-    def create_professional_record(self, user_id: int, deped_id: str):
+    def create_professional_record(self, deped_id: str):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(
@@ -116,11 +131,11 @@ class DatabaseManager:
             )
             conn.commit()
 
-    def increment_error(self, user_id: int):
+    def increment_error(self, deped_id: str):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "UPDATE teachers_bio SET errors = errors + 1 WHERE id = ?",
-                (user_id,)
+                "UPDATE teachers_bio SET errors = errors + 1 WHERE deped_id = ?",
+                (deped_id,)
             )
             conn.commit()
