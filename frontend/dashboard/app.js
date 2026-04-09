@@ -2,6 +2,22 @@
 const buttons = document.querySelectorAll('.nav-btn');
 const mainContentArea = document.getElementById('main-content');
 
+// --- NEW: Logout Logic ---
+const logoutBtn = document.querySelector('.logout-btn');
+
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        // 1. Add the fade-out class to the entire body
+        document.body.classList.add('page-fade-out');
+
+        // 2. Wait for the CSS animation to finish (400ms) before redirecting
+        setTimeout(() => {
+            window.location.href = '../login_page.html';
+        }, 400); 
+    });
+}
+// -------------------------
+
 // Load the default view on startup
 window.addEventListener('DOMContentLoaded', () => {
     loadComponent('table1'); 
