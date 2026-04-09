@@ -4,7 +4,6 @@ from fastapi import FastAPI, Request, BackgroundTasks
 
 from database import DatabaseManager
 from sms_service import SMSService
-from ai_service import AIService
 from survey_service import SurveyService
 
 
@@ -13,19 +12,33 @@ load_dotenv()
 HTTPSMS_API_KEY = os.getenv("HTTPSMS_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 FROM_NUMBER = os.getenv("FROM_NUMBER")
-DB_FILE = "teachers.db"
+
+# Change database file here
+DB_FILE = "education.db"
+
+DISPLAY_MESSAGES = {
+    1: "Good Day! This is the STAR's data collection system!",
+    2: "Identity confirmed!"
+}
 
 SURVEY_QUESTIONS = {
-    1: "Hello Teacher! Please reply with the TOTAL NUMBER of students enrolled in your advisory class.",
-    2: "Thank you. Now, please reply with the number of students who DO NOT have internet access at home.",
+    1: "Ilagay ang DepEd ID: ",
+    2: "Ilagay ang School ID (isulat ang N/A kung wala):  ",
+    3: "Buong Pangalan [Apilyido],[Suffix/Hulapi],[Unang Pangalan],[Gitnang Pangalan]",
+    4: "Edad (Ex: 30): ",
+    5: "Kasarian (Ex: Lalake): ",
+    6: "Tagal ng Pagtuturo: ",
+    7: "Posisyon: ",
+    8: "Ispesyalisasiyon: ",
+    9: "Gaano kadalas ka may internet? ",
+    10: "Gaano karami ang iyong device? "
 }
 
 db = DatabaseManager(DB_FILE)
 db.init_db()
 
 sms_service = SMSService(HTTPSMS_API_KEY, FROM_NUMBER)
-ai_service = AIService(GEMINI_API_KEY, SURVEY_QUESTIONS)
-survey_service = SurveyService(db, sms_service, ai_service)
+survey_service = SurveyService(db, sms_service, DISPLAY_MESSAGES, SURVEY_QUESTIONS)
 
 app = FastAPI()
 
