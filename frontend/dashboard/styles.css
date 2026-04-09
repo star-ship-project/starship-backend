@@ -190,3 +190,20 @@
         tr:hover td {
             background-color: rgba(56, 189, 248, 0.08);
         }
+
+        /* --- Page Transitions --- */
+        .page-fade-out {
+            /* The 'forwards' keyword ensures it stays at 0% opacity at the end */
+            animation: fadeOutPage 0.4s ease forwards; 
+        }
+
+        @keyframes fadeOutPage {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+        }
