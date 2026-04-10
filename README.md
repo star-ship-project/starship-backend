@@ -6,12 +6,13 @@ SMS-based teacher data collection system using FastAPI and HTTSPMS.
 
 - Python 3.14+
 - HTTPSMS account (https://httpsms.com)
+- ngrok
 
 ## Installation
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/star-ship-project/starship-system.git
 cd starship-system
 
 # Install dependencies
@@ -43,13 +44,17 @@ The server runs at `http://localhost:8000`
 
 ## Webhook Setup
 
-1. For local development, use ngrok:
+1. start ngrok on port 8000:
    ```bash
    ngrok http 8000
    ```
+
 2. Go to HTTPSMS Dashboard → Webhooks
+
 3. Create a new webhook with the ngrok URL but append "/webhook": `https://your-domain.com/webhook`
+
 4. ONLY enable the "message.phone.received" event in the webhoook.
+
 5. The phone number in the webhook should be the phone number of the sender.
 
 ## SMS Survey Flow
