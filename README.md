@@ -43,14 +43,14 @@ The server runs at `http://localhost:8000`
 
 ## Webhook Setup
 
-1.. For local development, use ngrok:
+1. For local development, use ngrok:
    ```bash
    ngrok http 8000
    ```
-3. Go to HTTPSMS Dashboard → Webhooks
-4. Create a new webhook with the ngrok URL but append '/webhook': `https://your-domain.com/webhook`
-5. ONLY enable the message.phone.received event in the webhoook.
-6. The phone number in the webhook should be the phone number of the sender.
+2. Go to HTTPSMS Dashboard → Webhooks
+3. Create a new webhook with the ngrok URL but append "/webhook": `https://your-domain.com/webhook`
+4. ONLY enable the "message.phone.received" event in the webhoook.
+5. The phone number in the webhook should be the phone number of the sender.
 
 ## SMS Survey Flow
 
