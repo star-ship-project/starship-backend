@@ -64,7 +64,7 @@ pip install -r "requirements.txt"
 ### Running the Server
 
 ```bash
-./venv/bin/uvicorn main:app --reload
+uvicorn main:app --reload
 ```
 
 The server runs at `http://localhost:8000`
