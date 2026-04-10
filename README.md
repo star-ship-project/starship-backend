@@ -7,6 +7,7 @@ SMS-based teacher data collection system using FastAPI and HTTSPMS.
 - Python 3.14+
 - HTTPSMS account (https://httpsms.com)
 - ngrok
+- sqlite3
 
 ## Installation
 
@@ -22,12 +23,6 @@ source venv/bin/activate  # Linux/Mac
 
 # Install dependencies
 pip install -r requirements.txt
-```
-
-## Database Setup
-
-```bash
-sqlite3 star.db < database/seed.sql
 ```
 
 ## Project Structure
@@ -115,6 +110,15 @@ The system collects teacher data via SMS in 10 steps:
 | 8 | Specialization |
 | 9 | Internet access? (yes/no) |
 | 10 | Number of devices |
+
+## Database Setup (Optional)
+
+The server will automatically create the database schema on startup. To populate it with sample data:
+
+```bash
+sqlite3 star.db < database/seed.sql
+```
+
 
 ## Frontend
 
