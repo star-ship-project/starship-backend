@@ -6,6 +6,19 @@ class SurveyService:
         self.messages = messages
         self.questions = questions
 
+    def _convert_word_to_number(self, text: str) -> int | None:
+        from word2number import w2n
+        try:
+            return w2n.word_to_number(text)
+        except ValueError:
+            return None
+
+    def _parse_years(self, text: str) -> int | None:
+        import re
+        text_clean = text.lower().strip()
+        text_clean = re.sub(r"(taon|years|yr)", "", text_clean, flags=re.IGNORECASE).strip()
+        return self._convert_word_to_number(text_clean)
+
     def process_sms(self, phone: str, text: str):
         user_row = self.db.get_user_by_phone(phone)
 
@@ -55,27 +68,47 @@ class SurveyService:
         except ValueError:
             is_number = False
 
-        if is_number:
-            if step == 4:
-                self.db.update_bio(deped_id, "age", value, 5)
-                print(f"[DB] Saved age = {value} for {deped_id}")
-                self.sms.send_sms(phone, self.questions[5])
+        if step == 4:
+            value = self._convert_word_to_number(user_text)
+            if value is None:
+                try:
+                    value = int(user_text)
+                except ValueError:
+                    if errors < 1:
+                        self.db.increment_error(deped_id)
+                        self.sms.send_sms(phone, "Pakisulat ang tamang edad (hal. 30 o thirty): ")
+                    return
+            self.db.update_bio(deped_id, "age", value, 5)
+            print(f"[DB] Saved age = {value} for {deped_id}")
+            self.sms.send_sms(phone, self.questions[5])
+            return
+        elif step == 6:
+            value = self._parse_years(user_text)
+            if value is None:
+                if errors < 1:
+                    self.db.increment_error(deped_id)
+                    self.sms.send_sms(phone, "Pakisagot ang tagal ng pagtuturo (hal. 10 years o 10 taon): ")
                 return
-            elif step == 6:
-                self.db.update_professional(deped_id, "years_experience", value)
-                self.db.update_step(deped_id, 7)
-                print(f"[DB] Saved years_experience = {value} for {deped_id}")
-                self.sms.send_sms(phone, self.questions[7])
-                return
-            elif step == 10:
-                self.db.update_professional(deped_id, "device_count", value)
-                self.db.update_step(deped_id, 11)
-                print(f"[DB] Saved device_count = {value} for {deped_id}")
-                self.sms.send_sms(phone, "Salamat! Successfully completed the survey.")
-                return
-            else:
-                self.sms.send_sms(phone, self.questions[step + 1])
-                return
+            self.db.update_professional(deped_id, "years_experience", value)
+            self.db.update_step(deped_id, 7)
+            print(f"[DB] Saved years_experience = {value} for {deped_id}")
+            self.sms.send_sms(phone, self.questions[7])
+            return
+        elif step == 10:
+            value = self._convert_word_to_number(user_text)
+            if value is None:
+                try:
+                    value = int(user_text)
+                except ValueError:
+                    if errors < 1:
+                        self.db.increment_error(deped_id)
+                        self.sms.send_sms(phone, "Pakisagot ang dami ng device (hal. 2 o dalawa): ")
+                    return
+            self.db.update_professional(deped_id, "device_count", value)
+            self.db.update_step(deped_id, 11)
+            print(f"[DB] Saved device_count = {value} for {deped_id}")
+            self.sms.send_sms(phone, "Salamat! Successfully completed the survey.")
+            return
         else:
             if step == 2:
                 self.db.update_bio(deped_id, "school_id", user_text, 3)
