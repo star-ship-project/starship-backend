@@ -15,8 +15,41 @@ SMS-based teacher data collection system using FastAPI and HTTSPMS.
 git clone https://github.com/star-ship-project/starship-system.git
 cd starship-system
 
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate  # Windows
+
 # Install dependencies
 pip install -r requirements.txt
+```
+
+## Database Setup
+
+```bash
+sqlite3 star.db < database/seed.sql
+```
+
+## Project Structure
+
+```
+starship-system/
+├── main.py                 # FastAPI entry point
+├── backend/
+│   ├── data/
+│   │   └── database.py   # Database manager
+│   └── services/
+│       ├── sms_service.py       # SMS handling
+│       ├── survey_service.py  # Survey logic
+│       └── ai_service.py   # AI (deprecated)
+├── frontend/
+│   ├── login_page.html
+│   ├── login.js
+│   └── dashboard/
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+└── star.db
 ```
 
 ## Configuration
@@ -36,7 +69,7 @@ pip install -r "requirements.txt"
 ### Running the Server
 
 ```bash
-uvicorn main:app --reload
+./venv/bin/uvicorn main:app --reload
 ```
 
 The server runs at `http://localhost:8000`

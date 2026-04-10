@@ -5,9 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
-from database import DatabaseManager
-from sms_service import SMSService
-from survey_service import SurveyService
+from backend.data.database import DatabaseManager
+from backend.services.sms_service import SMSService
+from backend.services.survey_service import SurveyService
 
 
 load_dotenv()
