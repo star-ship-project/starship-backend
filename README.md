@@ -25,7 +25,6 @@ pip install -r requirements.txt
 
 ```env
 HTTPSMS_API_KEY=your_httpsms_api_key
-GEMINI_API_KEY=your_gemini_api_key # deprecated
 FROM_NUMBER=+639123456789
 ```
 
@@ -49,7 +48,7 @@ The server runs at `http://localhost:8000`
    ngrok http 8000
    ```
 
-2. Go to HTTPSMS Dashboard → Webhooks
+2. Go to HTTPSMS Dashboard → Settings →  Add Webhook
 
 3. Create a new webhook with the ngrok URL but append "/webhook": `https://your-domain.com/webhook`
 
@@ -57,9 +56,17 @@ The server runs at `http://localhost:8000`
 
 5. The phone number in the webhook should be the phone number of the sender.
 
+## HTTPSMS Setup
+
+1. On an android phone download the HTTPSMS app.
+
+2. Input your API key from the HTTPSMS website and also input the same phone number used in FROM_NUMBER.
+
+3. Phone should now be active.
+
 ## SMS Survey Flow
 
-Send a message to initiate the bot.
+From a different phone number send a message to the number you put in FROM_NUMBER to initiate the bot.
 
 The system collects teacher data via SMS in 10 steps:
 
@@ -78,7 +85,14 @@ The system collects teacher data via SMS in 10 steps:
 
 ## Frontend
 
-Open `frontend/dashboard/index.html` in a browser to view the dashboard.
+The server runs at `http://localhost:8000`. The frontend is served through FastAPI:
+
+- Login page: `http://localhost:8000/`
+- Dashboard: `http://localhost:8000/frontend/dashboard/index.html`
+
+**Login Credentials:**
+- Username: `admin1`
+- Password: `12345`
 
 ## API Endpoints
 
