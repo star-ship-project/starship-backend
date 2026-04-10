@@ -9,7 +9,7 @@ class SurveyService:
     def _convert_word_to_number(self, text: str) -> int | None:
         from word2number import w2n
         try:
-            return w2n.word_to_number(text)
+            return w2n.word_to_num(text)
         except ValueError:
             return None
 

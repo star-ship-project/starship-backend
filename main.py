@@ -31,8 +31,8 @@ SURVEY_QUESTIONS = {
     6: "Tagal ng Pagtuturo: ",
     7: "Posisyon: ",
     8: "Ispesyalisasiyon: ",
-    9: "May access ka ba sa internet? ",
-    10: "Gaano karami ang iyong device? "
+    9: "May access ka ba sa internet?: ",
+    10: "Gaano karami ang iyong device?: "
 }
 
 db = DatabaseManager(DB_FILE)
