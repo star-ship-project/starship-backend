@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAR S.H.I.P - Main Console</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-window">
+        
+        <header class="top-banner">
+            <div class="header-titles">
+                <h1>STAR S.H.I.P</h1>
+                <div class="sub-header">STAR SMS Hub for Information Processing</div>
+            </div>
+            <button class="logout-btn">Logout</button>
+        </header>
+
+        <div class="app-body">
+            
+            <aside class="sidebar">
+                <button class="nav-btn active" data-target="schools">Schools</button>
+                <button class="nav-btn" data-target="teachers-bio">Teacher Bios</button>
+                <button class="nav-btn" data-target="teachers-professional">Professional Data</button>
+                <button class="nav-btn" data-target="qualifications">Qualifications</button>
+                <button class="nav-btn" data-target="star-events">STAR Events</button>
+            </aside>
+            
+            <main id="main-content" style="flex: 1; display: flex; flex-direction: column;">
+                </main>
+
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
