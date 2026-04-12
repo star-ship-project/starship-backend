@@ -80,6 +80,11 @@ The system collects teacher data via SMS in 10 steps:
 
 Open `frontend/dashboard/index.html` in a browser to view the dashboard.
 
+open port on localhost 'http://localhost:8000'
+
+start cmd
+input command "python -m uvicorn API_Main:app --reload"
+
 ## API Endpoints
 
 - `GET /api/schools` - List all schools
