@@ -8,7 +8,7 @@ if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
         document.body.classList.add('page-fade-out');
         setTimeout(() => {
-            window.location.href = '../login_page.html';
+            window.location.href = '/';
         }, 400); 
     });
 }
@@ -31,7 +31,7 @@ buttons.forEach(button => {
 // The Component Loader
 async function loadComponent(componentName) {
     try {
-        const response = await fetch(`components/${componentName}.html`);
+        const response = await fetch(`/frontend/dashboard/components/${componentName}.html`);
         if (!response.ok) throw new Error(`Could not load ${componentName}.html`);
         
         const html = await response.text();

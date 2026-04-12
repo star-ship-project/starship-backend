@@ -6,7 +6,8 @@ class DatabaseManager:
         self.db_file = db_file
 
     def init_db(self):
-        schema_path = os.path.join(os.path.dirname(__file__), "database", "schema.sql")
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        schema_path = os.path.join(base_dir, "database", "schema.sql")
         with open(schema_path, "r") as f:
             schema = f.read()
 

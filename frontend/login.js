@@ -59,7 +59,7 @@ loginForm.addEventListener('submit', function(event) {
     // 5. Hardcoded Validation (Only runs if both fields have text)
     if (enteredUsername === 'admin1' && enteredPassword === '12345') {
         // Success: Redirect to the main console dashboard
-        window.location.href = 'dashboard/index.html';
+        window.location.href = '/frontend/dashboard/index.html';
     } else {
         // Failure: Show inline vague error and clear password
         authError.classList.add('show'); 

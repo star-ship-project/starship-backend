@@ -7,6 +7,7 @@ SMS-based teacher data collection system using FastAPI and HTTSPMS.
 - Python 3.14+
 - HTTPSMS account (https://httpsms.com)
 - ngrok
+- sqlite3
 
 ## Installation
 
@@ -15,8 +16,35 @@ SMS-based teacher data collection system using FastAPI and HTTSPMS.
 git clone https://github.com/star-ship-project/starship-system.git
 cd starship-system
 
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate  # Windows
+
 # Install dependencies
 pip install -r requirements.txt
+```
+
+## Project Structure
+
+```
+starship-system/
+├── main.py                 # FastAPI entry point
+├── backend/
+│   ├── data/
+│   │   └── database.py   # Database manager
+│   └── services/
+│       ├── sms_service.py       # SMS handling
+│       ├── survey_service.py  # Survey logic
+│       └── ai_service.py   # AI (deprecated)
+├── frontend/
+│   ├── login_page.html
+│   ├── login.js
+│   └── dashboard/
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+└── star.db
 ```
 
 ## Configuration
@@ -25,7 +53,6 @@ pip install -r requirements.txt
 
 ```env
 HTTPSMS_API_KEY=your_httpsms_api_key
-GEMINI_API_KEY=your_gemini_api_key # deprecated
 FROM_NUMBER=+639123456789
 ```
 
@@ -49,7 +76,7 @@ The server runs at `http://localhost:8000`
    ngrok http 8000
    ```
 
-2. Go to HTTPSMS Dashboard → Webhooks
+2. Go to HTTPSMS Dashboard → Settings →  Add Webhook
 
 3. Create a new webhook with the ngrok URL but append "/webhook": `https://your-domain.com/webhook`
 
@@ -57,9 +84,17 @@ The server runs at `http://localhost:8000`
 
 5. The phone number in the webhook should be the phone number of the sender.
 
+## HTTPSMS Setup
+
+1. On an android phone download the HTTPSMS app.
+
+2. Input your API key from the HTTPSMS website and also input the same phone number used in FROM_NUMBER.
+
+3. Phone should now be active.
+
 ## SMS Survey Flow
 
-Send a message to initiate the bot.
+From a different phone number send a message to the number you put in FROM_NUMBER to initiate the bot.
 
 The system collects teacher data via SMS in 10 steps:
 
@@ -76,9 +111,25 @@ The system collects teacher data via SMS in 10 steps:
 | 9 | Internet access? (yes/no) |
 | 10 | Number of devices |
 
+## Database Setup (Optional)
+
+The server will automatically create the database schema on startup. To populate it with sample data:
+
+```bash
+sqlite3 star.db < database/seed.sql
+```
+
+
 ## Frontend
 
-Open `frontend/dashboard/index.html` in a browser to view the dashboard.
+The server runs at `http://localhost:8000`. The frontend is served through FastAPI:
+
+- Login page: `http://localhost:8000/`
+- Dashboard: `http://localhost:8000/frontend/dashboard/index.html`
+
+**Login Credentials:**
+- Username: `admin1`
+- Password: `12345`
 
 ## API Endpoints
 

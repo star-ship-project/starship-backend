@@ -2,10 +2,12 @@ import os, sqlite3
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, BackgroundTasks, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 
-from database import DatabaseManager
-from sms_service import SMSService
-from survey_service import SurveyService
+from backend.data.database import DatabaseManager
+from backend.services.sms_service import SMSService
+from backend.services.survey_service import SurveyService
 
 
 load_dotenv()
@@ -53,6 +55,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    with open("frontend/login_page.html", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/login.js")
+async def login_js():
+    with open("frontend/login.js", encoding="utf-8") as f:
+        return f.read()
 
 
 # --- Database Helper Function ---
